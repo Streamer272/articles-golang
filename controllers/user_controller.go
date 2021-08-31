@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"articles-golang/database"
 	"articles-golang/exceptions"
-	"articles-golang/models"
 	"articles-golang/services"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -18,15 +16,7 @@ func Register(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	user := models.User{
-		Username: fmt.Sprintf("%v", data["username"]),
-		Email:    fmt.Sprintf("%v", data["email"]),
-		Password: fmt.Sprintf("%v", data["password"]),
-	}
-
-	database.DB.Create(&user)
-
-	c.JSON(user)
+	c.JSON(services.CreateUser(data["username"], data["email"], data["password"]))
 
 	return nil
 }
@@ -39,8 +29,7 @@ func Login(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	var user models.User
-	database.DB.Where("email = ?", data["email"]).First(&user)
+	user := services.GetUser(data["email"])
 
 	if user.Id == 0 {
 		c.Status(fiber.StatusBadRequest)
@@ -74,6 +63,8 @@ func Logout(c *fiber.Ctx) error {
 	tokenId, _ := strconv.Atoi(fmt.Sprintf("%v", data["tokenId"]))
 
 	services.InvalidateToken(uint(tokenId))
+
+	c.SendStatus(fiber.StatusOK)
 
 	return nil
 }
