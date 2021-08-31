@@ -7,11 +7,10 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 	"time"
 )
 
-const Secret = "secret"
+const secret = "secret"
 
 func Register(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
@@ -45,24 +44,31 @@ func Login(c *fiber.Ctx) error {
 	var user models.User
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
-	if user.Id == 0 || &user == nil {
+	if user.Id == 0 {
 		c.Status(fiber.StatusBadRequest)
 		c.SendString("User not found")
+
+		return nil
 	}
 
 	if user.Password != data["password"] {
 		c.Status(fiber.StatusBadRequest)
 		c.SendString("Incorrect password")
+
+		return nil
 	}
 
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    strconv.Itoa(int(user.Id)),
-		ExpiresAt: time.Now().Add(time.Hour * 2).Unix(),
-	})
+	jwtToken := jwt.New(jwt.SigningMethodHS256)
+	claims := jwtToken.Claims.(jwt.MapClaims)
 
-	token, err := claims.SignedString([]byte(Secret))
+	claims["authorized"] = true
+	claims["userId"] = user.Id
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
+	claims["sub"] = "1"
+
+	token, err := jwtToken.SignedString([]byte(secret))
 	if err != nil {
-		panic(fiber.ErrInternalServerError)
+		panic(err)
 	}
 
 	c.JSON(fiber.Map{
@@ -72,9 +78,14 @@ func Login(c *fiber.Ctx) error {
 	return nil
 }
 
+func Logout(c *fiber.Ctx) error {
+
+	return nil
+}
+
 func GetUserByToken(token string) models.User {
 	jwtToken, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(Secret), nil
+		return []byte(secret), nil
 	})
 	if err != nil {
 		panic(fiber.ErrUnauthorized)
