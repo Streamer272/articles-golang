@@ -28,7 +28,6 @@ func CreateArticle(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	fmt.Printf("xd: %v\n", data["userId"])
 	database.DB.Where("id = ?", data["userId"]).First(&user)
 
 	article := models.Article{

@@ -11,15 +11,15 @@ import (
 func Register(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
 
-	var data map[string]string
+	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
 		panic(err)
 	}
 
 	user := models.User{
-		Username: data["username"],
-		Email:    data["email"],
-		Password: data["password"],
+		Username: fmt.Sprintf("%v", data["username"]),
+		Email:    fmt.Sprintf("%v", data["email"]),
+		Password: fmt.Sprintf("%v", data["password"]),
 	}
 
 	database.DB.Create(&user)
@@ -34,15 +34,13 @@ func Login(c *fiber.Ctx) error {
 
 	defer exceptions.HandleException(c)
 
-	var data map[string]string
+	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
 		panic(err)
 	}
 
 	var user models.User
 	database.DB.Where("email = ?", data["email"]).First(&user)
-
-	fmt.Printf("%v\n", user)
 
 	if user.Id == 0 || &user == nil {
 		c.Status(fiber.StatusBadRequest)
