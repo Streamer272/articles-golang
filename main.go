@@ -21,7 +21,7 @@ func main() {
 
 	routes.Setup(app)
 
-	if err := app.Listen(":8000"); err != nil {
+	if err := app.Listen(":8080"); err != nil {
 		panic(err)
 	}
 }

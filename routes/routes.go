@@ -3,7 +3,7 @@ package routes
 import (
 	"articles-golang/controllers"
 	"articles-golang/exceptions"
-	"articles-golang/middlewares"
+	"articles-golang/middleware"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -12,7 +12,7 @@ func Setup(app *fiber.App) {
 	// TODO: add check if all json fields are satisfied
 
 	app.Use(cors.New(cors.Config{}))
-	app.Use(middlewares.CheckToken)
+	app.Use(middleware.CheckToken)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		defer exceptions.HandleException(c)
@@ -29,5 +29,5 @@ func Setup(app *fiber.App) {
 	app.Post("/users/login", controllers.Login)
 	app.Post("/users/logout", controllers.Logout)
 
-	app.Use(middlewares.LogOnMiddleWare)
+	app.Use(middleware.LogOnMiddleWare)
 }
