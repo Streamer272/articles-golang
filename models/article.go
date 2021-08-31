@@ -1,11 +1,9 @@
 package models
 
-import "gorm.io/gorm"
-
 type Article struct {
-	gorm.Model
-	UserId int
-	User   User `gorm:"foreignKey:UserId"`
-	Title  string
-	Text   string
+	Id     uint   `gorm:"primaryKey" json:"id"`
+	Title  string `json:"title"`
+	Text   string `json:"text"`
+	UserId int    `json:"user_id"`
+	User   User   `gorm:"foreignKey:UserId;references:id" json:"-"`
 }

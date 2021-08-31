@@ -19,10 +19,10 @@ func HandleException(c *fiber.Ctx) {
 
 		if err == fiber.ErrUnprocessableEntity {
 			status = fiber.StatusUnprocessableEntity
-		} else if err == fiber.ErrInternalServerError {
-			status = fiber.StatusInternalServerError
 		} else if err == fiber.ErrBadRequest {
 			status = fiber.StatusBadRequest
+		} else {
+			status = fiber.StatusInternalServerError
 		}
 
 		c.SendStatus(status)

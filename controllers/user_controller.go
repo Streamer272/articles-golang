@@ -6,7 +6,6 @@ import (
 	"articles-golang/models"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -17,11 +16,10 @@ func Register(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 	user := models.User{
 		Username: data["username"],
 		Email:    data["email"],
-		Password: string(password),
+		Password: data["password"],
 	}
 
 	database.DB.Create(&user)
@@ -44,14 +42,14 @@ func Login(c *fiber.Ctx) error {
 	var user models.User
 	database.DB.Where("email = ?", data["email"]).First(&user)
 
-	fmt.Printf("%v, %v\n", user, user.ID)
+	fmt.Printf("%v\n", user)
 
-	if user.ID == 0 || &user == nil {
+	if user.Id == 0 || &user == nil {
 		c.Status(fiber.StatusBadRequest)
 		c.SendString("User not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data["password"])); err != nil {
+	if user.Password != data["password"] {
 		c.Status(fiber.StatusBadRequest)
 		c.SendString("Incorrect password")
 	}

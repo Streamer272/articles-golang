@@ -4,6 +4,7 @@ import (
 	"articles-golang/database"
 	"articles-golang/exceptions"
 	"articles-golang/models"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,18 +22,19 @@ func GetArticles(c *fiber.Ctx) error {
 func CreateArticle(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
 
-	var data map[string]string
+	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
 		panic(fiber.ErrUnprocessableEntity)
 	}
 
 	var user models.User
-	database.DB.Find(&user, data["userId"])
+	fmt.Printf("xd: %v\n", data["userId"])
+	database.DB.Where("id = ?", data["userId"]).First(&user)
 
 	article := models.Article{
 		User:  user,
-		Title: data["title"],
-		Text:  data["text"],
+		Title: fmt.Sprintf("%v", data["title"]),
+		Text:  fmt.Sprintf("%v", data["text"]),
 	}
 
 	database.DB.Create(&article)
