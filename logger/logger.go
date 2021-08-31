@@ -9,7 +9,7 @@ import (
 
 const (
 	prefix      = "[%v %v %v]"
-	baseMessage = " %v --> \"%v\"\n"
+	baseMessage = " %v --> %v\n"
 )
 
 func LogOnMiddleWare(c *fiber.Ctx) error {
@@ -28,9 +28,9 @@ func LogOnMiddleWare(c *fiber.Ctx) error {
 
 	dateTime := time.Now().Format("02-01-2006 15:04:05")
 
-	fmt.Printf(prefix+baseMessage, dateTime, logType, time.Since(startTime), c.Route().Method, c.Route().Path)
+	fmt.Printf(prefix+baseMessage, dateTime, logType, time.Since(startTime), c.Route().Method, c.Path())
 
-	_, err = fmt.Fprintf(file, prefix+baseMessage, dateTime, logType, time.Since(startTime), c.Route().Method, c.Route().Path)
+	_, err = fmt.Fprintf(file, prefix+baseMessage, dateTime, logType, time.Since(startTime), c.Route().Method, c.Path())
 	if err != nil {
 		panic(err)
 	}

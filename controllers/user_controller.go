@@ -27,6 +27,5 @@ func Register(c *fiber.Ctx) error {
 
 	c.JSON(user)
 
-	c.Next()
 	return nil
 }

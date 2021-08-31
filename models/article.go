@@ -4,6 +4,8 @@ import "gorm.io/gorm"
 
 type Article struct {
 	gorm.Model
-	Title string
-	Text  string
+	UserId int
+	User   User `gorm:"foreignKey:UserId"`
+	Title  string
+	Text   string
 }

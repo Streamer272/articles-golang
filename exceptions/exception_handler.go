@@ -30,5 +30,7 @@ func HandleException(c *fiber.Ctx) {
 		if err := recover(); err != nil {
 			c.SendStatus(fiber.StatusInternalServerError)
 		}
+
+		c.Next()
 	}()
 }
