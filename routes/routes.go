@@ -8,6 +8,7 @@ import (
 
 func Setup(app *fiber.App) {
 	app.Get("/", controllers.GetArticles)
+	app.Post("/register", controllers.Register)
 
 	app.Use(logger.LogOnMiddleWare)
 }

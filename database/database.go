@@ -8,18 +8,18 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func Connect() {
-	db_, err := gorm.Open(mysql.Open("articles_user:articles_password@/articles"), &gorm.Config{
+	conn, err := gorm.Open(mysql.Open("articles_user:articles_password@/articles"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
 		panic(err)
 	}
-	db = db_
+	DB = conn
 
-	err = db.AutoMigrate(&models.Article{}, &models.User{})
+	err = DB.AutoMigrate(&models.Article{}, &models.User{})
 	if err != nil {
 		panic(err)
 	}

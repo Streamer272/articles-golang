@@ -19,6 +19,5 @@ func GetArticles(c *fiber.Ctx) error {
 	}
 
 	c.Next()
-
 	return nil
 }
