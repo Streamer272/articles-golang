@@ -1,23 +1,23 @@
 package database
 
 import (
+	customLogger "articles-golang/logger"
 	"articles-golang/models"
-	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-var Db *gorm.DB
+var db *gorm.DB
 
 func Connect() {
-	db, err := gorm.Open(mysql.Open("articles_user:articles_password@/articles"), &gorm.Config{
+	db_, err := gorm.Open(mysql.Open("articles_user:articles_password@/articles"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
 		panic(err)
 	}
-	Db = db
+	db = db_
 
 	err = db.AutoMigrate(&models.Article{}, &models.User{})
 	if err != nil {
@@ -26,7 +26,7 @@ func Connect() {
 
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Printf("Error occured while connecting to the database... %v\n", err)
+			customLogger.LogError(err)
 		}
 	}()
 }

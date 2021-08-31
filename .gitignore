@@ -3,3 +3,6 @@
 /.vscode
 /.atom
 /.vs
+
+# log files
+/log/*.log

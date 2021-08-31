@@ -1,23 +1,24 @@
 package controllers
 
 import (
+	"articles-golang/exceptions"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticles(c *fiber.Ctx) error {
+	defer exceptions.HandleException(c)
+
 	var data map[string]string
 
 	if err := c.BodyParser(&data); err != nil {
-		return err
+		panic(fiber.ErrUnprocessableEntity)
 	}
 
 	if err := c.JSON(data); err != nil {
-		return err
+		panic(fiber.ErrInternalServerError)
 	}
 
-	if err := c.Next(); err != nil {
-		return err
-	}
+	c.Next()
 
 	return nil
 }
