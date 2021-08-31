@@ -4,7 +4,6 @@ import (
 	"articles-golang/database"
 	"articles-golang/exceptions"
 	"articles-golang/models"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,7 +23,6 @@ func CreateArticle(c *fiber.Ctx) error {
 
 	var data map[string]string
 	if err := c.BodyParser(&data); err != nil {
-		fmt.Printf("Err: %v\n", err)
 		panic(fiber.ErrUnprocessableEntity)
 	}
 
