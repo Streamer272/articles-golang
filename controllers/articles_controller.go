@@ -3,11 +3,14 @@ package controllers
 import (
 	"articles-golang/exceptions"
 	"articles-golang/services"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticles(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
+
+	fmt.Printf("GetArticles\n")
 
 	c.JSON(services.GetArticles())
 

@@ -10,16 +10,18 @@ func main() {
 	database.Connect()
 
 	app := fiber.New(fiber.Config{
-		Prefork:       true,
-		CaseSensitive: true,
-		StrictRouting: true,
+		Prefork:       false,
+		CaseSensitive: false,
+		StrictRouting: false,
 		ServerHeader:  "Fiber",
 		AppName:       "Articles Golang",
 	})
 
+	app.Server().MaxConnsPerIP = 1
+
 	routes.Setup(app)
 
-	if err := app.Listen(":8080"); err != nil {
+	if err := app.Listen(":8000"); err != nil {
 		panic(err)
 	}
 }
