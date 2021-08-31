@@ -16,14 +16,14 @@ func CreateToken(userId uint) uint {
 	return token.Id
 }
 
-func IsTokenValid(tokenId uint) bool {
+func IsTokenValid(tokenId interface{}) bool {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
 	return token.Expires.Unix() <= time.Now().Unix()
 }
 
-func InvalidateToken(tokenId uint) {
+func InvalidateToken(tokenId interface{}) {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 

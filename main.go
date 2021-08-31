@@ -9,7 +9,13 @@ import (
 func main() {
 	database.Connect()
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		Prefork:       true,
+		CaseSensitive: true,
+		StrictRouting: true,
+		ServerHeader:  "Fiber",
+		AppName:       "Articles Golang",
+	})
 
 	routes.Setup(app)
 

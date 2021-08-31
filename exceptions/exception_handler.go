@@ -21,6 +21,8 @@ func HandleException(c *fiber.Ctx) {
 			status = fiber.StatusUnprocessableEntity
 		} else if err == fiber.ErrBadRequest {
 			status = fiber.StatusBadRequest
+		} else if err == fiber.ErrUnauthorized {
+			status = fiber.StatusUnauthorized
 		} else {
 			status = fiber.StatusInternalServerError
 		}
