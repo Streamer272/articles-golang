@@ -17,7 +17,8 @@ func Setup(app *fiber.App) {
 	})
 	app.Get("/articles", controllers.GetArticles)
 	app.Put("/articles", controllers.CreateArticle)
-	app.Put("/register", controllers.Register)
+	app.Put("/users/register", controllers.Register)
+	app.Post("/users/login", controllers.Login)
 
 	app.Use(logger.LogOnMiddleWare)
 }
