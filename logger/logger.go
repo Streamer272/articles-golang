@@ -65,11 +65,11 @@ func LogError(error interface{}) {
 
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Printf(prefix+" Error (%v) occured while logging error (%v)...\n", dateTime, "ERROR", "", error, err)
+			fmt.Printf(prefix+" Error (%v) occured while logging error (%v)...\n", dateTime, "ERROR", "0", error, err)
 		}
 
 		if err = file.Close(); err != nil {
-			fmt.Printf(prefix+" Error (%v) occured while closing log file...\n", dateTime, "ERROR", "", err)
+			fmt.Printf(prefix+" Error (%v) occured while closing log file...\n", dateTime, "ERROR", "0", err)
 		}
 	}()
 }
