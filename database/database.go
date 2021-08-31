@@ -19,7 +19,7 @@ func Connect() {
 	}
 	DB = conn
 
-	err = DB.AutoMigrate(&models.Article{}, &models.User{})
+	err = DB.AutoMigrate(&models.Article{}, &models.User{}, &models.Token{})
 	if err != nil {
 		panic(err)
 	}

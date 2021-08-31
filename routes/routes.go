@@ -18,8 +18,11 @@ func Setup(app *fiber.App) {
 		c.SendString("Welcome!")
 		return nil
 	})
+
 	app.Get("/articles", controllers.GetArticles)
+	app.Get("/articles/:id", controllers.GetArticle)
 	app.Put("/articles", controllers.CreateArticle)
+	app.Delete("/articles", controllers.DeleteArticle)
 
 	app.Put("/users/register", controllers.Register)
 	app.Post("/users/login", controllers.Login)

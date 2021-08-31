@@ -1,20 +1,23 @@
 package controllers
 
 import (
-	"articles-golang/database"
 	"articles-golang/exceptions"
-	"articles-golang/models"
-	"fmt"
+	"articles-golang/services"
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticles(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
 
-	var articles []models.Article
-	database.DB.Find(&articles)
+	c.JSON(services.GetArticles())
 
-	c.JSON(articles)
+	return nil
+}
+
+func GetArticle(c *fiber.Ctx) error {
+	defer exceptions.HandleException(c)
+
+	c.JSON(services.GetArticle(c.Params("id")))
 
 	return nil
 }
@@ -27,18 +30,20 @@ func CreateArticle(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	var user models.User
-	database.DB.Where("id = ?", data["userId"]).First(&user)
+	c.JSON(services.CreateArticle(data["userId"], data["title"], data["text"]))
 
-	article := models.Article{
-		User:  user,
-		Title: fmt.Sprintf("%v", data["title"]),
-		Text:  fmt.Sprintf("%v", data["text"]),
+	return nil
+}
+
+func DeleteArticle(c *fiber.Ctx) error {
+	defer exceptions.HandleException(c)
+
+	var data map[string]interface{}
+	if err := c.BodyParser(&data); err != nil {
+		panic(err)
 	}
 
-	database.DB.Create(&article)
-
-	c.JSON(article)
+	c.JSON(services.DeleteArticle(data["articleId"]))
 
 	return nil
 }

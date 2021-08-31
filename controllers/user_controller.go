@@ -4,8 +4,10 @@ import (
 	"articles-golang/database"
 	"articles-golang/exceptions"
 	"articles-golang/models"
+	"articles-golang/services"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -54,10 +56,7 @@ func Login(c *fiber.Ctx) error {
 		return nil
 	}
 
-	token, err := GenerateToken(user.Id)
-	if err != nil {
-		panic(err)
-	}
+	token := services.CreateToken(user.Id)
 
 	c.JSON(fiber.Map{
 		"token": token,
@@ -67,6 +66,14 @@ func Login(c *fiber.Ctx) error {
 }
 
 func Logout(c *fiber.Ctx) error {
+	var data map[string]interface{}
+	if err := c.BodyParser(&data); err != nil {
+		panic(err)
+	}
+
+	tokenId, _ := strconv.Atoi(fmt.Sprintf("%v", data["tokenId"]))
+
+	services.InvalidateToken(uint(tokenId))
 
 	return nil
 }
