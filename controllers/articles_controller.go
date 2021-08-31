@@ -24,7 +24,7 @@ func CreateArticle(c *fiber.Ctx) error {
 
 	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
-		panic(fiber.ErrUnprocessableEntity)
+		panic(err)
 	}
 
 	var user models.User

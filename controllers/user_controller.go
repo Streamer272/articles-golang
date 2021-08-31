@@ -5,12 +5,8 @@ import (
 	"articles-golang/exceptions"
 	"articles-golang/models"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"time"
 )
-
-const secret = "secret"
 
 func Register(c *fiber.Ctx) error {
 	defer exceptions.HandleException(c)
@@ -58,15 +54,7 @@ func Login(c *fiber.Ctx) error {
 		return nil
 	}
 
-	jwtToken := jwt.New(jwt.SigningMethodHS256)
-	claims := jwtToken.Claims.(jwt.MapClaims)
-
-	claims["authorized"] = true
-	claims["userId"] = user.Id
-	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
-	claims["sub"] = "1"
-
-	token, err := jwtToken.SignedString([]byte(secret))
+	token, err := GenerateToken(user.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -81,20 +69,4 @@ func Login(c *fiber.Ctx) error {
 func Logout(c *fiber.Ctx) error {
 
 	return nil
-}
-
-func GetUserByToken(token string) models.User {
-	jwtToken, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(secret), nil
-	})
-	if err != nil {
-		panic(fiber.ErrUnauthorized)
-	}
-
-	claims := jwtToken.Claims.(*jwt.StandardClaims)
-
-	var user models.User
-	database.DB.Where("id = ?", claims.Issuer).First(&user)
-
-	return user
 }
