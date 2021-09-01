@@ -20,6 +20,10 @@ func IsTokenValid(tokenId interface{}) bool {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
+	if token.Id == 0 {
+		return false
+	}
+
 	return token.Expires.Unix() <= time.Now().Unix()
 }
 
